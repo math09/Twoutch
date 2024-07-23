@@ -60,12 +60,12 @@ async function updateMovies (req, res) {
         if (!movie) return res.status(404).send("User not found");
 
         if(name) movie.name = name;
-        if(name) movie.release_date = release_date;
-        if(name) movie.creator = creator;
-        if(name) movie.distributor = distributor;
-        if(name) movie.actors = actors;
-        if(name) movie.categories = categories;
-        if(name) movie.url = url;
+        if(release_date) movie.release_date = release_date;
+        if(creator) movie.creator = creator;
+        if(distributor) movie.distributor = distributor;
+        if(actors) movie.actors = actors;
+        if(categories) movie.categories = categories;
+        if(url) movie.url = url;
 
         await movie.save();
 

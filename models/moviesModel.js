@@ -6,7 +6,7 @@ const movieSchema = new mongoose.Schema({
   creator: { type: String, required: true },
   distributor: { type: String, required: true },
   actors: { type: [String], required: true },
-  categories: { type: [String], default: Date.now },
+  categories: { type: [String], required: true },
   url: { type: String, required: true },
 });
 
