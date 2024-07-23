@@ -55,6 +55,7 @@ async function login(req, res) {
 // Récupération d'un utilisateur
 async function getUser (req, res) {
     try {
+        if (req.user.role !== "ADMIN") return res.status(403).send("Forbidden");
         const user = await User.findById(req.params.id).select("-password");
         if (!user) return res.status(404).send("User not found");
         res.send(user);
@@ -67,7 +68,12 @@ async function getUser (req, res) {
 // Récupération de tous les utilisateurs
 async function getAllUsers (req, res) {
     try {
-        const users = await User.find().select("-password");
+        let users;
+        if (req.user.role == "USER") {
+            users = await User.find({ _id: req.user.id }).select("-password");
+        } else {
+            users = await User.find().select("-password");
+        }
         if (!users) return res.status(404).send("Users not found");
         res.send(users);
     } catch (error) {
@@ -79,6 +85,7 @@ async function getAllUsers (req, res) {
 // Création d'un utilisateur
 async function createUser (req, res) {
     try {
+        if (req.user.role !== "ADMIN") return res.status(403).send("Forbidden");
         const { name, email, password, role } = req.body;
 
         let user = await User.findOne({ email });
@@ -95,7 +102,7 @@ async function createUser (req, res) {
         delete user.password;
 
         res.send(user);
-    } 
+    }
     catch (error) {
         logger.error(error);
         res.status(500).send("Server error");
@@ -103,11 +110,18 @@ async function createUser (req, res) {
 };
 
 // Midification d'un utilisateur
-async function updateUser (req, res) {
+async function updateUser(req, res) {
     try {
         const { name, email, password } = req.body;
 
-        let user = await User.findById(req.params.id);
+        let id
+        if (req.params.id && req.user.role == "ADMIN") {
+            id = req.params.id;
+        }
+        id = req.user.id;
+
+
+        let user = await User.findById(id);
         if (!user) return res.status(404).send("User not found");
 
         if (password) {
@@ -116,8 +130,8 @@ async function updateUser (req, res) {
             user.password = hashedPassword;
         }
 
-        if(name) user.name = name;
-        if(email) user.email = email;
+        if (name) user.name = name;
+        if (email) user.email = email;
 
         await user.save();
 
@@ -131,9 +145,16 @@ async function updateUser (req, res) {
     }
 }
 
-async function deleteUser (req, res) {
+async function deleteUser(req, res) {
     try {
-        const user = await User.findByIdAndDelete(req.params.id);
+        let id;
+
+        if (req.params.id && req.user.role == "ADMIN") {
+            id = req.params.id;
+        }
+        id = req.user.id;
+
+        const user = await User.findByIdAndDelete(id);
         if (!user) return res.status(404).send("User not found");
         res.status(204).send("User deleted");
     } catch (error) {
