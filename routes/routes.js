@@ -1,5 +1,5 @@
 import e from 'express';
-// import history from './historyRoutes.js';
+import history from './historyRoutes.js';
 import movies from './moviesRoutes.js';
 import favorites from './favoritesRoutes.js';
 // import playlist from './playlistRoutes.js';
@@ -12,7 +12,7 @@ const router = e.Router();
 
 router.use("/api/user", user)
 
-// router.use("/api/history", history)
+router.use("/api/history", history)
 
 router.use("/api/movies", movies)
 
