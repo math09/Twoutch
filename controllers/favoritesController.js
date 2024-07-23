@@ -5,7 +5,9 @@ import logger from "../utils/logger.js";
 // Récupération d'un utilisateur
 async function getFavorite (req, res) {
     try {
-        const favorites = await Movies.findById(Favorite.findById(req.params.id).select("Moviesid"));
+        const userFavorite = await Favorite.find({ userId: { $in: req.user.id } })
+        const favoriteMovieIds = userFavorite.find({ _id: { $in: req.params.id } })
+        const favorites = await Movies.findById(favoriteMovieIds);
         if (!favorites) return res.status(404).send("Favorite not found");
         res.send(favorites);
     } catch (error) {
@@ -17,9 +19,11 @@ async function getFavorite (req, res) {
 // Récupération de tous les utilisateurs
 async function getAllFavorites (req, res) {
     try {
-        const favorites = await Movies.findById(Favorite.find().select("Moviesid"));
-        if (!favorites) return res.status(404).send("Favorites not found");
-        res.send(favorites);
+        const favorites = await Favorite.find({ userId: { $in: req.user.id } }).select("Moviesid");
+        const favoriteMovieIds = favorites.map(fav => fav.Moviesid);
+        const favoriteMovies = await Movies.find({ _id: { $in: favoriteMovieIds } });
+        if (!favoriteMovies) return res.status(404).send("Favorite not found");
+        res.send(favoriteMovies);
     } catch (error) {
         logger.error(error);
         res.status(500).send("Server error");
@@ -34,7 +38,7 @@ async function createFavorite (req, res) {
         let favorites = await Favorite.findOne({ Moviesid });
         if (favorites) return res.status(409).send("Favorite already registered.");
 
-        favorites = new Favorite({ Moviesid });
+        favorites = new Favorite({ Moviesid, userId: req.user.id });
 
         await favorites.save();
 
@@ -51,12 +55,13 @@ async function createFavorite (req, res) {
 // Midification d'un utilisateur
 async function updateFavorite (req, res) {
     try {
-        const { Moviesid } = req.body;
+        const { Moviesid, userId } = req.body;
 
         let favorites = await Favorite.findById(req.params.id);
         if (!favorites) return res.status(404).send("Favorite not found");
 
         if(Moviesid) favorites.Moviesid = Moviesid;
+        if(userId) favorites.userId = userId;
 
         await favorites.save();
 
