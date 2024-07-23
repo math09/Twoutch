@@ -4,7 +4,9 @@ import routes from './routes/routes.js';
 import config from './config/config.js';
 import mongoose from 'mongoose';
 import helmet from 'helmet';
+import swaggerUi from "swagger-ui-express";
 import logger from './utils/logger.js';
+import swaggerDocument from './swagger.json' assert { type: 'json' };
 
 const app = express();
 const server = http.createServer(app);
@@ -20,7 +22,18 @@ mongoose
   .then(() => logger.info("Connected to MongoDB"))
   .catch((err) => logger.error("Could not connect to MongoDB", err));
 
+
+
+// Swagger
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument, { explorer: true })
+);
+
 // Route
 app.use("/", routes);
+
+
 
 export default app;
