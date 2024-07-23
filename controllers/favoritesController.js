@@ -1,10 +1,11 @@
 import Favorite from "../models/favoritesModel.js";
 import Movies from "../models/moviesModel.js";
+import logger from "../utils/logger.js";
 
 // Récupération d'un utilisateur
 async function getFavorite (req, res) {
     try {
-        const favorites = await Movies.findById(req.params.id);
+        const favorites = await Movies.findById(Favorite.findById(req.params.id).select("Moviesid"));
         if (!favorites) return res.status(404).send("Favorite not found");
         res.send(favorites);
     } catch (error) {
@@ -16,11 +17,11 @@ async function getFavorite (req, res) {
 // Récupération de tous les utilisateurs
 async function getAllFavorites (req, res) {
     try {
-        const favorites = await Movies.findById(Favorite.find().select("id"));
+        const favorites = await Movies.findById(Favorite.find().select("Moviesid"));
         if (!favorites) return res.status(404).send("Favorites not found");
         res.send(favorites);
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).send("Server error");
     }
 };
@@ -42,7 +43,7 @@ async function createFavorite (req, res) {
         res.send(favorites);
     } 
     catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).send("Server error");
     }
 };
@@ -63,7 +64,7 @@ async function updateFavorite (req, res) {
 
         res.send(favorites);
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).send("Server error");
     }
 }
@@ -74,7 +75,7 @@ async function deleteFavorite (req, res) {
         if (!favorites) return res.status(404).send("Favorite not found");
         res.status(204).send("Favorite deleted");
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).send("Server error");
     }
 }
