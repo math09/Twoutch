@@ -7,7 +7,7 @@ async function getAllHistory(req, res) {
     try {
         const userId = req.user.id;
 
-        const historyEntries = await History.find({ userId }).populate('movieId');
+        const historyEntries = (await History.find({ userId }).populate('movieId')).filter((e) => e.status === 'watched' || e.status === 'in progress');
 
         if (!historyEntries.length) return res.status(404).send("History not found");
         res.send(historyEntries);
