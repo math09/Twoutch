@@ -4,6 +4,7 @@ import routes from './routes/routes.js';
 import config from './config/config.js';
 import mongoose from 'mongoose';
 import helmet from 'helmet';
+import logger from './utils/logger.js';
 
 const app = express();
 const server = http.createServer(app);
@@ -16,8 +17,8 @@ app.disable('x-powered-by')
 // Database
 mongoose
   .connect(config.dbUri, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.error("Could not connect to MongoDB", err));
+  .then(() => logger.info("Connected to MongoDB"))
+  .catch((err) => logger.error("Could not connect to MongoDB", err));
 
 // Route
 app.use("/", routes);

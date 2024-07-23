@@ -1,6 +1,7 @@
 import User from "../models/userModel.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 import bcrypt from "bcrypt";
+import logger from "../utils/logger.js";
 
 // Inscription d'un utilisateur
 async function register (req, res) {
@@ -25,7 +26,7 @@ async function register (req, res) {
             role: user.role
         });
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).send("Server error");
     }
 };
@@ -46,7 +47,7 @@ async function login(req, res) {
 
         res.header("x-auth-token", token).send("Login successful");
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).send("Server error");
     }
 };
@@ -58,7 +59,7 @@ async function getUser (req, res) {
         if (!user) return res.status(404).send("User not found");
         res.send(user);
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).send("Server error");
     }
 };
@@ -70,7 +71,7 @@ async function getAllUsers (req, res) {
         if (!users) return res.status(404).send("Users not found");
         res.send(users);
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).send("Server error");
     }
 };
@@ -96,7 +97,7 @@ async function createUser (req, res) {
         res.send(user);
     } 
     catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).send("Server error");
     }
 };
@@ -125,7 +126,7 @@ async function updateUser (req, res) {
 
         res.send(user);
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).send("Server error");
     }
 }
@@ -136,7 +137,7 @@ async function deleteUser (req, res) {
         if (!user) return res.status(404).send("User not found");
         res.status(204).send("User deleted");
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).send("Server error");
     }
 }
