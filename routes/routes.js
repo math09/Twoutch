@@ -4,7 +4,7 @@ import movies from 'moviesRoutes.js';
 import favorites from 'favoritesRoutes.js';
 import playlist from 'playlistRoutes.js';
 import recomendation from 'recomendationRoutes.js';
-import user from 'user.js'
+import user from 'usersRoutes.js'
 
 const router = e.Router();
 
