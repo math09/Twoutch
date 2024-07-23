@@ -1,10 +1,10 @@
-import e from "express";
-import history from history
-import movies from movies
-import favorites from favorites
-import playlist from playlist
-import recomendation from recomendation
-import user from user
+import e from 'express';
+import history from 'historyRoutes.js';
+import movies from 'moviesRoutes.js';
+import favorites from 'favoritesRoutes.js';
+import playlist from 'playlistRoutes.js';
+import recomendation from 'recomendationRoutes.js';
+import user from 'user.js'
 
 const router = e.Router();
 
