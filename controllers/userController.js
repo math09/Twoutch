@@ -53,6 +53,7 @@ async function login(req, res) {
 
 // Récupération d'un utilisateur
 async function getUser (req, res) {
+    console.log(req.user);
     try {
         const user = await User.findById(req.params.id).select("-password");
         if (!user) return res.status(404).send("User not found");
