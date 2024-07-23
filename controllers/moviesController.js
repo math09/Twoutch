@@ -1,4 +1,5 @@
 import Movie from '../models/moviesModel.js';
+import logger from '../utils/logger.js';
 
 // Récupération de tous les films
 async function getAllMovies(req, res) {
@@ -7,7 +8,7 @@ async function getAllMovies(req, res) {
         if (!movies) return res.status(404).send("Movies not found");
         res.send(movies);
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).send("Server error");
     }
 }
@@ -19,13 +20,12 @@ async function getMovieById (req, res) {
         if (!movie) return res.status(404).send("User not found");
         res.send(movie);
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).send("Server error");
     }
 };
 
 // Création d'un films
-// rajouter image
 async function createMovie (req, res) {
     try {
         if (req.user.role != 'ADMIN'){
@@ -43,7 +43,7 @@ async function createMovie (req, res) {
         res.send(movie);
     } 
     catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).send("Server error");
     }
 };
@@ -71,7 +71,7 @@ async function updateMovies (req, res) {
 
         res.send(movie);
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).send("Server error");
     }
 }
@@ -85,7 +85,7 @@ async function deleteMovies (req, res) {
         if (!movie) return res.status(404).send("User not found");
         res.status(204).send("User deleted");
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).send("Server error");
     }
 }
