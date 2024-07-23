@@ -19,7 +19,7 @@ async function register (req, res) {
 
         const token = authMiddleware.generateAccessToken({ id: user._id, role: user.role });
 
-        res.header("x-auth-token", token).send({
+        res.header("Authorization", token).send({
             _id: user._id,
             name: user.name,
             email: user.email,
@@ -45,7 +45,7 @@ async function login(req, res) {
 
         const token = authMiddleware.generateAccessToken({ id: user._id, role: user.role });
 
-        res.header("x-auth-token", token).send("Login successful");
+        res.header("Authorization", token).send("Login successful");
     } catch (error) {
         logger.error(error);
         res.status(500).send("Server error");
