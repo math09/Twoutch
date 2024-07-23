@@ -13,7 +13,7 @@ async function getAllMovies(req, res) {
     }
 }
 
-// Récupération d'un utilisateur
+// Récupération d'un film
 async function getMovieById (req, res) {
     try {
         const movie = await Movie.findById(req.params.id);
@@ -25,7 +25,36 @@ async function getMovieById (req, res) {
     }
 };
 
-// Création d'un films
+// recherche de films
+async function getMoviesByValue (req, res) {
+    try {
+        
+        let dateValue = null;
+
+        if (!isNaN(Date.parse(req.params.value))) {
+            dateValue = new Date(req.params.value);
+        }
+
+        const query = {
+            $or: [
+                { name: req.params.value },
+                { categories: { $in: [req.params.value] } }
+            ]
+        };
+        if (dateValue) {
+            query.$or.push({ release_date: dateValue });
+        }
+
+        const movies = await Movie.find(query);
+        if (!movies) return res.status(404).send("User not found");
+        res.send(movies);
+    } catch (error) {
+        logger.error(error);
+        res.status(500).send("Server error");
+    }
+};
+
+// Création d'un film
 async function createMovie (req, res) {
     try {
         if (req.user.role != 'ADMIN'){
@@ -48,7 +77,7 @@ async function createMovie (req, res) {
     }
 };
 
-// Midification d'un utilisateur
+// Modification d'un film
 async function updateMovies (req, res) {
     if (req.user.role != 'ADMIN'){
         return res.status(403).send("Forbidden request");
@@ -76,6 +105,7 @@ async function updateMovies (req, res) {
     }
 }
 
+// Supression d'un film
 async function deleteMovies (req, res) {
     if (req.user.role != 'ADMIN'){
         return res.status(403).send("Forbidden request");
@@ -94,6 +124,7 @@ async function deleteMovies (req, res) {
 export default {
     getAllMovies,
     getMovieById,
+    getMoviesByValue,
     createMovie,
     updateMovies,
     deleteMovies
