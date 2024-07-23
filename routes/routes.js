@@ -6,6 +6,7 @@ import favorites from './favoritesRoutes.js';
 // import recomendation from './recommendationRoutes.js';
 import user from './usersRoutes.js'
 import userController from '../controllers/userController.js';
+import errorMiddlware from '../middlewares/errorMiddlware.js';
 
 const router = e.Router();
 
@@ -23,5 +24,8 @@ router.use("/api/favorites", favorites)
 
 router.post("/api/login", userController.login);
 router.post("/api/register", userController.register);
+
+router.use(errorMiddlware.notFound);
+router.use(errorMiddlware.errorHandler);
 
 export default router;

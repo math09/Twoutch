@@ -4,16 +4,30 @@ import logger from '../utils/logger.js';
 // Récupération de tous les films
 async function getAllMovies(req, res) {
     try {
-        const movies = await Movie.find();
+        const page = parseInt(req.query.page, 10) || 1; 
+        const limit = parseInt(req.query.limit, 10) || 10;
+        
+        if (page < 1 || limit < 1) {
+            return res.status(400).send("Page and limit must be positive");
+        }
+        const skip = (page - 1) * limit;
+        const movies = await Movie.find().skip(skip).limit(limit);
         if (!movies) return res.status(404).send("Movies not found");
-        res.send(movies);
+        const totalMovies = await Movie.countDocuments();
+        const response = {
+            totalMovies,
+            totalPages: Math.ceil(totalMovies / limit),
+            currentPage: page,
+            movies
+        };
+        res.send(response);
     } catch (error) {
         logger.error(error);
         res.status(500).send("Server error");
     }
 }
 
-// Récupération d'un utilisateur
+// Récupération d'un film
 async function getMovieById (req, res) {
     try {
         const movie = await Movie.findById(req.params.id);
@@ -25,7 +39,36 @@ async function getMovieById (req, res) {
     }
 };
 
-// Création d'un films
+// recherche de films
+async function getMoviesByValue (req, res) {
+    try {
+        
+        let dateValue = null;
+
+        if (!isNaN(Date.parse(req.params.value))) {
+            dateValue = new Date(req.params.value);
+        }
+
+        const query = {
+            $or: [
+                { name: req.params.value },
+                { categories: { $in: [req.params.value] } }
+            ]
+        };
+        if (dateValue) {
+            query.$or.push({ release_date: dateValue });
+        }
+
+        const movies = await Movie.find(query);
+        if (!movies) return res.status(404).send("User not found");
+        res.send(movies);
+    } catch (error) {
+        logger.error(error);
+        res.status(500).send("Server error");
+    }
+};
+
+// Création d'un film
 async function createMovie (req, res) {
     try {
         if (req.user.role != 'ADMIN'){
@@ -48,12 +91,12 @@ async function createMovie (req, res) {
     }
 };
 
-// Midification d'un utilisateur
+// Modification d'un film
 async function updateMovies (req, res) {
     if (req.user.role != 'ADMIN'){
         return res.status(403).send("Forbidden request");
     }
-    try {
+    try {   
         const { name, release_date, creator, distributor, actors, categories, url } = req.body;
 
         let movie = await Movie.findById(req.params.id);
@@ -76,6 +119,7 @@ async function updateMovies (req, res) {
     }
 }
 
+// Supression d'un film
 async function deleteMovies (req, res) {
     if (req.user.role != 'ADMIN'){
         return res.status(403).send("Forbidden request");
@@ -94,6 +138,7 @@ async function deleteMovies (req, res) {
 export default {
     getAllMovies,
     getMovieById,
+    getMoviesByValue,
     createMovie,
     updateMovies,
     deleteMovies

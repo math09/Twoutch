@@ -5,8 +5,9 @@ import authMiddleware from "../middlewares/authMiddleware.js";
 
 const router = e.Router();
 
-router.get("/",authMiddleware.authenticateToken, moviesController.getAllMovies)
-router.get("/:id",authMiddleware.authenticateToken, moviesController.getMovieById)
+router.get("/", moviesController.getAllMovies)
+router.get("/:id", moviesController.getMovieById)
+router.get("/search/:value", moviesController.getMoviesByValue)
 router.post("/",authMiddleware.authenticateToken, moviesController.createMovie)
 router.put("/:id",authMiddleware.authenticateToken, moviesController.updateMovies)
 router.delete("/:id",authMiddleware.authenticateToken, moviesController.deleteMovies)
