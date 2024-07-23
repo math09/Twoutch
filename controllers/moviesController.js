@@ -4,9 +4,23 @@ import logger from '../utils/logger.js';
 // Récupération de tous les films
 async function getAllMovies(req, res) {
     try {
-        const movies = await Movie.find();
+        const page = parseInt(req.query.page, 10) || 1; 
+        const limit = parseInt(req.query.limit, 10) || 10;
+        
+        if (page < 1 || limit < 1) {
+            return res.status(400).send("Page and limit must be positive");
+        }
+        const skip = (page - 1) * limit;
+        const movies = await Movie.find().skip(skip).limit(limit);
         if (!movies) return res.status(404).send("Movies not found");
-        res.send(movies);
+        const totalMovies = await Movie.countDocuments();
+        const response = {
+            totalMovies,
+            totalPages: Math.ceil(totalMovies / limit),
+            currentPage: page,
+            movies
+        };
+        res.send(response);
     } catch (error) {
         logger.error(error);
         res.status(500).send("Server error");
@@ -82,7 +96,7 @@ async function updateMovies (req, res) {
     if (req.user.role != 'ADMIN'){
         return res.status(403).send("Forbidden request");
     }
-    try {
+    try {   
         const { name, release_date, creator, distributor, actors, categories, url } = req.body;
 
         let movie = await Movie.findById(req.params.id);
