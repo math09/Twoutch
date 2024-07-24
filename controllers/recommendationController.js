@@ -2,12 +2,11 @@ import Favorites from '../models/favoritesModel.js';
 import Movies from '../models/moviesModel.js';
 import logger from '../utils/logger.js';
 
-// Récupération de tous les recommendations
+// Récupération de toutes les recommendations
 async function getRecommendations(req, res) {
     try {
         const favorites = await Favorites.find({userId: req.user.id}).populate('Moviesid');
         if (!favorites) return [];
-        console.log(favorites);
         const categories = [];
         for (const fav of favorites) {
             fav.Moviesid.categories.forEach(category => {
