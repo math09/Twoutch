@@ -5,24 +5,26 @@ import logger from '../utils/logger.js';
 // Récupération de tous les recommendations
 async function getRecommendations(req, res) {
     try {
-
-        const favorites = await Favorites.findById(req.params.id);
+        const favorites = await Favorites.find({userId: req.user.id}).populate('Moviesid');
         if (!favorites) return [];
-
+        console.log(favorites);
         const categories = [];
-        for (const movieId of favorites.Moviesid) {
-            const movie = await Movies.findById(movieId);
-            movie.categories.forEach(category => {
+        for (const fav of favorites) {
+            fav.Moviesid.categories.forEach(category => {
                 if (!categories.includes(category)){
                     categories.push(category)
                 }
             });
         }
         const allMoviesInCategories  = await Movies.find({categories: { $in: categories }});
-        const favoriteMovieIds = new Set(favorites.Moviesid.map(id => id.toString()));
-        const movies = allMoviesInCategories.filter(movie => !favoriteMovieIds.has(movie._id.toString()));
 
-        res.send(movies);
+        for (const fav of favorites) {
+            const movie = allMoviesInCategories.find(movie => movie._id.toString() === fav.Moviesid._id.toString());
+            allMoviesInCategories.splice(allMoviesInCategories.indexOf(movie), 1);
+        }
+        
+
+        res.send(allMoviesInCategories);
     } catch (error) {
         logger.error(error);
         res.status(500).send("Server error");

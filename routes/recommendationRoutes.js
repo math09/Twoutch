@@ -5,6 +5,6 @@ import authMiddleware from "../middlewares/authMiddleware.js";
 
 const router = e.Router();
 
-router.get("/:id",authMiddleware.authenticateToken, recommendationController.getRecommendations)
+router.get("/",authMiddleware.authenticateToken, recommendationController.getRecommendations)
 
 export default router
