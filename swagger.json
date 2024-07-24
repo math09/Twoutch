@@ -1,9 +1,8 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "User Management API",
-        "version": "1.0.0",
-        "description": "API for managing users"
+        "title": "Twoutch API",
+        "version": "1.0.0"
     },
     "paths": {
         "/api/register": {
@@ -99,7 +98,7 @@
                 ],
                 "security": [
                     {
-                        "bearerAuth": []
+                        "jwtAuth": []
                     }
                 ],
                 "responses": {
@@ -134,7 +133,7 @@
                 ],
                 "security": [
                     {
-                        "bearerAuth": []
+                        "jwtAuth": []
                     }
                 ],
                 "requestBody": {
@@ -169,14 +168,14 @@
                     }
                 }
             },
-            "put":{
+            "put": {
                 "summary": "Update my user account",
                 "tags": [
                     "Users"
                 ],
                 "security": [
                     {
-                        "bearerAuth": []
+                        "jwtAuth": []
                     }
                 ],
                 "requestBody": {
@@ -222,14 +221,14 @@
                     }
                 }
             },
-            "delete":{
+            "delete": {
                 "summary": "Delete a user",
                 "tags": [
                     "Users"
                 ],
                 "security": [
                     {
-                        "bearerAuth": []
+                        "jwtAuth": []
                     }
                 ],
                 "responses": {
@@ -256,7 +255,7 @@
                 ],
                 "security": [
                     {
-                        "bearerAuth": []
+                        "jwtAuth": []
                     }
                 ],
                 "parameters": [
@@ -298,7 +297,7 @@
                 ],
                 "security": [
                     {
-                        "bearerAuth": []
+                        "jwtAuth": []
                     }
                 ],
                 "parameters": [
@@ -361,7 +360,7 @@
                 ],
                 "security": [
                     {
-                        "bearerAuth": []
+                        "jwtAuth": []
                     }
                 ],
                 "parameters": [
@@ -383,6 +382,853 @@
                     },
                     "404": {
                         "description": "User not found"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "/api/movies": {
+            "get": {
+                "summary": "Get all movies",
+                "tags": [
+                    "Movies"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        },
+                        "description": "Page number"
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        },
+                        "description": "Number of items per page"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of movies",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MovieList"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page or limit"
+                    },
+                    "404": {
+                        "description": "Movies not found"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a new movie",
+                "tags": [
+                    "Movies"
+                ],
+                "security": [
+                    {
+                        "jwtAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/MovieInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Movie created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Movie"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden request"
+                    },
+                    "409": {
+                        "description": "Movie already added"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "/api/movies/{id}": {
+            "get": {
+                "summary": "Get a movie by ID",
+                "tags": [
+                    "Movies"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Movie found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Movie"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Movie not found"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update a movie",
+                "tags": [
+                    "Movies"
+                ],
+                "security": [
+                    {
+                        "jwtAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/MovieInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Movie updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Movie"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden request"
+                    },
+                    "404": {
+                        "description": "Movie not found"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a movie",
+                "tags": [
+                    "Movies"
+                ],
+                "security": [
+                    {
+                        "jwtAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Movie deleted successfully"
+                    },
+                    "403": {
+                        "description": "Forbidden request"
+                    },
+                    "404": {
+                        "description": "Movie not found"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "/api/movies/search/{value}": {
+            "get": {
+                "summary": "Search movies",
+                "tags": [
+                    "Movies"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "value",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Search value (name, category, or release date)"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of matching movies",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Movie"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No movies found"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "/api/favorites": {
+            "get": {
+                "summary": "Get all favorites for the authenticated user",
+                "tags": [
+                    "Favorites"
+                ],
+                "security": [
+                    {
+                        "jwtAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of favorite movies",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Movie"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Favorites not found"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add a movie to favorites",
+                "tags": [
+                    "Favorites"
+                ],
+                "security": [
+                    {
+                        "jwtAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "Moviesid": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "Moviesid"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Favorite added successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Favorite"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "409": {
+                        "description": "Favorite already registered"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "/api/favorites/{id}": {
+            "get": {
+                "summary": "Get a specific favorite",
+                "tags": [
+                    "Favorites"
+                ],
+                "security": [
+                    {
+                        "jwtAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Favorite movie details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Movie"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Favorite not found"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update a favorite",
+                "tags": [
+                    "Favorites"
+                ],
+                "security": [
+                    {
+                        "jwtAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FavoriteInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Favorite updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Favorite"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Favorite not found"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a favorite",
+                "tags": [
+                    "Favorites"
+                ],
+                "security": [
+                    {
+                        "jwtAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Favorite deleted successfully"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Favorite not found"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "/api/history": {
+            "get": {
+                "summary": "Get all history entries for the authenticated user",
+                "tags": [
+                    "History"
+                ],
+                "security": [
+                    {
+                        "jwtAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of history entries",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/History"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "History not found"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a new history entry",
+                "tags": [
+                    "History"
+                ],
+                "security": [
+                    {
+                        "jwtAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/HistoryInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "History entry created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/History"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Movie not found"
+                    },
+                    "409": {
+                        "description": "Movie already added"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "/api/history/{id}": {
+            "put": {
+                "summary": "Update a history entry",
+                "tags": [
+                    "History"
+                ],
+                "security": [
+                    {
+                        "jwtAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/HistoryUpdateInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "History entry updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/History"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "History entry not found"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a history entry",
+                "tags": [
+                    "History"
+                ],
+                "security": [
+                    {
+                        "jwtAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "History entry deleted successfully"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "History entry not found"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "/api/playlists": {
+            "get": {
+                "summary": "Get all playlists",
+                "tags": [
+                    "Playlists"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of playlists",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Playlist"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Playlists not found"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a new playlist",
+                "tags": [
+                    "Playlists"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PlaylistInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Playlist created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Playlist"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Playlist already registered"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "/api/playlists/{id}": {
+            "get": {
+                "summary": "Get a playlist by ID",
+                "tags": [
+                    "Playlists"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Playlist found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Playlist"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Playlist not found"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update a playlist",
+                "tags": [
+                    "Playlists"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PlaylistInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Playlist updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Playlist"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Playlist not found"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a playlist",
+                "tags": [
+                    "Playlists"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Playlist deleted successfully"
+                    },
+                    "404": {
+                        "description": "Playlist not found"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "/api/recommendations": {
+            "get": {
+                "summary": "Get movie recommendations",
+                "tags": [
+                    "Recommendations"
+                ],
+                "security": [
+                    {
+                        "jwtAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of recommended movies",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Movie"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
                     },
                     "500": {
                         "description": "Server error"
@@ -452,13 +1298,213 @@
                         "type": "string"
                     }
                 }
+            },
+            "Movie": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "release_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "creator": {
+                        "type": "string"
+                    },
+                    "distributor": {
+                        "type": "string"
+                    },
+                    "actors": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "categories": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "url": {
+                        "type": "string"
+                    }
+                }
+            },
+            "MovieInput": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "release_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "creator": {
+                        "type": "string"
+                    },
+                    "distributor": {
+                        "type": "string"
+                    },
+                    "actors": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "categories": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "url": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "name",
+                    "release_date",
+                    "creator",
+                    "distributor",
+                    "actors",
+                    "categories",
+                    "url"
+                ]
+            },
+            "MovieList": {
+                "type": "object",
+                "properties": {
+                    "totalMovies": {
+                        "type": "integer"
+                    },
+                    "totalPages": {
+                        "type": "integer"
+                    },
+                    "currentPage": {
+                        "type": "integer"
+                    },
+                    "movies": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Movie"
+                        }
+                    }
+                }
+            },
+            "Favorite": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string"
+                    },
+                    "Moviesid": {
+                        "type": "string"
+                    },
+                    "userId": {
+                        "type": "string"
+                    },
+                    "adAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "FavoriteInput": {
+                "type": "object",
+                "properties": {
+                    "Moviesid": {
+                        "type": "string"
+                    },
+                    "userId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "History": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string"
+                    },
+                    "userId": {
+                        "type": "string"
+                    },
+                    "movieId": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "HistoryInput": {
+                "type": "object",
+                "properties": {
+                    "movieId": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "movieId",
+                    "status"
+                ]
+            },
+            "HistoryUpdateInput": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "status"
+                ]
+            },
+            "Playlist": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string"
+                    },
+                    "Moviesid": {
+                        "type": "string"
+                    },
+                    "adAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "PlaylistInput": {
+                "type": "object",
+                "properties": {
+                    "Moviesid": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "Moviesid"
+                ]
             }
         },
         "securitySchemes": {
-            "bearerAuth": {
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT"
+            "jwtAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "Authorization"
             }
         }
     }
