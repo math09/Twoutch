@@ -46,7 +46,7 @@ async function createHistory(req, res) {
     }
 };
 
-// Midification de historique
+// Modification de historique
 async function updateHistory(req, res) {
     try {
         const { status } = req.body;

@@ -109,7 +109,7 @@ async function createUser (req, res) {
     }
 };
 
-// Midification d'un utilisateur
+// Modification d'un utilisateur
 async function updateUser(req, res) {
     try {
         const { name, email, password } = req.body;

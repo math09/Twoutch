@@ -48,7 +48,7 @@ async function createPlaylist (req, res) {
     }
 };
 
-// Midification d'un utilisateur
+// Modification d'un utilisateur
 async function updatePlaylist (req, res) {
     try {
         const { Moviesid } = req.body;

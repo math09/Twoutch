@@ -52,7 +52,7 @@ async function createFavorite (req, res) {
     }
 };
 
-// Midification d'un utilisateur
+// Modification d'un utilisateur
 async function updateFavorite (req, res) {
     try {
         const { Moviesid, userId } = req.body;

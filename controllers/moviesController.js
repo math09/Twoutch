@@ -42,17 +42,18 @@ async function getMovieById (req, res) {
 // recherche de films
 async function getMoviesByValue (req, res) {
     try {
-        
         let dateValue = null;
 
         if (!isNaN(Date.parse(req.params.value))) {
             dateValue = new Date(req.params.value);
         }
 
+        const regex = new RegExp(req.params.value, 'i');
+
         const query = {
             $or: [
-                { name: req.params.value },
-                { categories: { $in: [req.params.value] } }
+                { name: { $regex: regex } },
+                { categories: { $in: [regex] } }
             ]
         };
         if (dateValue) {
@@ -60,13 +61,14 @@ async function getMoviesByValue (req, res) {
         }
 
         const movies = await Movie.find(query);
-        if (!movies) return res.status(404).send("User not found");
+
+        if (!movies || movies.length === 0) return res.status(404).send("Movies not found");
         res.send(movies);
     } catch (error) {
         logger.error(error);
         res.status(500).send("Server error");
     }
-};
+}
 
 // Création d'un film
 async function createMovie (req, res) {
