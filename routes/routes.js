@@ -2,7 +2,7 @@ import e from 'express';
 import history from './historyRoutes.js';
 import movies from './moviesRoutes.js';
 import favorites from './favoritesRoutes.js';
-// import playlist from './playlistRoutes.js';
+import playlist from './playlistRoutes.js';
 import recommendation from './recommendationRoutes.js';
 import user from './usersRoutes.js'
 import userController from '../controllers/userController.js';
@@ -18,7 +18,7 @@ router.use("/api/movies", movies)
 
 router.use("/api/favorites", favorites)
 
-// router.use("/api/playlist", playlist)
+router.use("/api/playlist", playlist)
 
 router.use("/api/recommendation", recommendation)
 

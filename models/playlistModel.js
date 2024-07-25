@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
 
 const playlistSchema = new mongoose.Schema({
-  Moviesid: { type: String, required: true },
-  adAt: { type: Date, default: Date.now },
+    userId: { type: mongoose.Schema.Types.ObjectId,  ref: 'User', required: true },
+    name: { type: String, required: true },
+    movies: { type: [mongoose.Schema.Types.ObjectId], ref: 'Movie', required: true },
+    adAt: { type: Date, default: Date.now },
 });
 
 const Playlist = mongoose.model("Playlist", playlistSchema);

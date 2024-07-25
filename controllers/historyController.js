@@ -1,4 +1,4 @@
-import History from '../models/historyModel.js';
+import History from '../models/movieLabelsModel.js';
 import Movie from '../models/moviesModel.js';
 import logger from '../utils/logger.js';
 
@@ -59,9 +59,7 @@ async function updateHistory(req, res) {
 
         await history.save();
     
-        if (!updatedHistory) return res.status(404).send("History entry not found");
-    
-        res.status(200).json(updatedHistory);
+        res.status(200).json(history);
     } catch (error) {
         logger.error(error);
         res.status(500).send("Server error");
