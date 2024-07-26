@@ -6,7 +6,7 @@
 
 ## 🛠️ Installation
 
-- create .env with .env_exemple, add your database connection and generate your token with the flollowing command :
+- create .env with .env_exemple, add your database connection and generate your token with the following command :
 
 ```bash 
 node
@@ -26,7 +26,7 @@ For start the project, use one of this following command :
 
 ## Documentation
 
-Once you run the aplication, you can  acces to swagger documentation here :
+Once you run the application, you can  access to swagger documentation here :
 
 http://localhost:3000/api-docs/
 
@@ -37,6 +37,6 @@ This API contain 3 type of users :
 
 - Public : Can search a movie or a serie in our catalog, create an account and register.
 
-- User : Can update his profile, interact with his favorite, playlist , recomendation and delete his account.
+- User : Can update his profile, interact with his favorite, playlist , recommandation and delete his account.
 
 - Admin : Can add, update and delete movies and series, see userlist and consult a user.
