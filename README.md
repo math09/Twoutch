@@ -18,7 +18,7 @@ require('crypto').randomBytes(64).toString('hex')
 
 ## Start project
 
-For start the project, use one of this following comand :
+For start the project, use one of this following command :
 
 - npm run dev
 
@@ -37,6 +37,6 @@ This API contain 3 type of users :
 
 - Public : Can search a movie or a serie in our catalog, create an account and register.
 
-- User : Can update his profile, interact with his favorite, playlit , recomendation and delete his account.
+- User : Can update his profile, interact with his favorite, playlist , recomendation and delete his account.
 
 - Admin : Can add, update and delete movies and series, see userlist and consult a user.
