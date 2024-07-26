@@ -6,15 +6,23 @@
 
 ## 🛠️ Installation
 
-- create .env with .env_exemple.
+- create .env with .env_exemple, add your database connection and generate your token with the flollowing command :
+
+```bash 
+node
+
+require('crypto').randomBytes(64).toString('hex')
+```
 
 - npm install
 
 ## Start project
 
-For start the project, use the following comand :
+For start the project, use one of this following comand :
 
 - npm run dev
+
+- npm run start
 
 ## Documentation
 
